@@ -1,55 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Go Starter</title>
-    <link rel="icon" type="image/png" href="/static/logo.png">
-    <meta property="og:image" content="/static/og.png">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #17161c; color: #ffffff; line-height: 1.6; }
-        a { color: #c2c7e0; }
-        nav { background-color: #17161c; padding: 1rem 2rem; border-bottom: 1px solid #272a3c; }
-        nav a { color: #c2c7e0; text-decoration: none; margin-right: 1.5rem; font-weight: 500; }
-        nav a:hover { color: #ffffff; }
-        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
-        h1 { margin-bottom: 1rem; color: #ffffff; }
-        .card { background: #1e2130; border: 1px solid #272a3c; border-radius: 12px; padding: 2rem; box-shadow: 0 2px 8px 1px rgba(0,0,0,0.1), 0 1px 5px 0 rgba(0,0,0,0.3); }
-        ul { list-style: none; }
-        ul li { padding: 0.75rem 0; border-bottom: 1px solid #272a3c; }
-        ul li:last-child { border-bottom: none; }
-    </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="小さなひらめきを、次のリリースへ。チームでアイデアを育てる Launchboard。">
+<title>Launchboard — Ideas into motion.</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/app.css"><script src="/static/app.js" defer></script>
 </head>
 <body>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/greetings">Greetings</a>
-    </nav>
-    <div class="container">
-        <div style="text-align: center; padding: 3rem 1rem;">
-            <img src="/static/og.png" alt="Go Starter" style="max-width: 320px; border-radius: 4px; margin-bottom: 2rem;">
-            <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Welcome to Go Starter</h1>
-            <p style="color: #696f8c; font-size: 1.1rem; margin-bottom: 2.5rem;">Your Gin app is up and running on Kamui Platform.</p>
-            <div class="card" style="display: inline-block; text-align: left; width: 100%; max-width: 500px;">
-                <h2 style="font-size: 1.1rem; margin-bottom: 1rem;">Next Steps</h2>
-                <ul style="list-style: none;">
-                    <li style="padding: 0.6rem 0; border-bottom: 1px solid #272a3c;">
-                        <span style="color: #00e7ad; margin-right: 0.5rem;">&#10003;</span> App deployed successfully
-                    </li>
-                    <li style="padding: 0.6rem 0; border-bottom: 1px solid #272a3c;">
-                        <span style="color: #00e7ad; margin-right: 0.5rem;">&#10003;</span> Database connected
-                    </li>
-                    <li style="padding: 0.6rem 0;">
-                        <span style="color: #696f8c; margin-right: 0.5rem;">&#9656;</span>
-                        <a href="/greetings" style="color: #ffffff;">Try the Greetings page</a>
-                    </li>
-                </ul>
-            </div>
-            <div style="margin-top: 2rem;">
-                <a href="/greetings" style="display: inline-block; padding: 0.75rem 2rem; background-color: #d91a01; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 1.1rem; font-weight: 500; transition: background-color 0.2s;">Get Started</a>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+<aside class="sidebar">
+<a class="brand" href="/" aria-label="Launchboard ホーム"><span class="brand-mark">↗</span>launchboard<span class="brand-period">.</span></a>
+<div class="workspace"><span class="workspace-icon">d.</span><div><strong>Dafu Studio</strong><small>Team workspace</small></div><span class="workspace-arrow">⌄</span></div>
+<p class="nav-label">WORKSPACE</p>
+<nav aria-label="メイン"><button class="nav-item active" data-view="all"><span>▦</span> Overview <span class="nav-count" id="nav-total">—</span></button><button class="nav-item" data-view="voted"><span>♡</span> My votes</button><button class="nav-item" data-view="shipped"><span>✓</span> Shipped</button></nav>
+<div class="sidebar-note"><span class="note-orbit">✳</span><strong>Good things start<br>with a little idea.</strong><p>そのひらめきが、<br>次の「いいね」になる。</p><button class="text-button" data-create>アイデアを届ける ↗</button></div>
+<div class="sidebar-bottom"><span class="avatar me">D</span><div><strong>Demo guest</strong><small>みんなで試せるデモ</small></div><span class="online-dot"></span></div>
+</aside>
+<div class="app-shell">
+<header class="topbar"><span><span class="breadcrumb">Workspace</span><span class="slash">/</span><span id="page-name">Overview</span></span><div class="topbar-right"><span class="demo-badge"><span class="online-dot"></span>LIVE DEMO</span><span class="avatar tiny">D</span></div></header>
+<nav class="mobile-views" aria-label="表示切り替え"><button class="active" data-view="all">Overview</button><button data-view="voted">My votes</button><button data-view="shipped">Shipped</button></nav>
+<main>
+<div class="heading"><div><div class="eyebrow"><span></span> A LITTLE IDEA. A BIG POSSIBILITY.</div><h1>次の「いいね」を、<br>ここから<span class="orange">。</span></h1><p class="intro">ひらめきを集めて、みんなで育てて、かたちにする。</p></div><button class="primary" data-create><span>＋</span> アイデアを追加</button></div>
+<section class="stats" aria-label="ワークスペースの集計"><div class="stat"><span class="stat-icon peach">↗</span><div><span class="stat-label">集まったアイデア</span><strong id="stat-ideas">—</strong></div><span class="stat-caption">Small sparks, big things.</span></div><div class="stat"><span class="stat-icon lilac">♡</span><div><span class="stat-label">みんなの投票</span><strong id="stat-votes">—</strong></div><span class="stat-caption">Every voice counts.</span></div><div class="stat"><span class="stat-icon mint">✓</span><div><span class="stat-label">リリース済み</span><strong id="stat-shipped">—</strong></div><span class="stat-caption">Made it happen.</span></div></section>
+<section class="board-section" aria-label="アイデアボード"><div class="section-heading"><div><h2 id="board-title">アイデアボード</h2><span class="section-subtitle">A space for what’s next.</span></div><button class="refresh" id="refresh" aria-label="最新のデータを取得">↻</button></div>
+<div class="toolbar"><div class="filters" role="group" aria-label="カテゴリで絞り込み"><button class="filter selected" data-category="all" aria-pressed="true">すべて</button><button class="filter" data-category="Product" aria-pressed="false"><span class="category-dot product"></span>Product</button><button class="filter" data-category="Design" aria-pressed="false"><span class="category-dot design"></span>Design</button><button class="filter" data-category="Engineering" aria-pressed="false"><span class="category-dot engineering"></span>Engineering</button></div><div class="tools"><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="アイデアを検索" aria-label="アイデアを検索"></label><select id="sort" aria-label="並び順"><option value="popular">人気順 ↓</option><option value="recent">新着順 ↓</option></select></div></div>
+<div id="load-error" role="alert" hidden></div>
+<div class="board" id="board" aria-busy="true"><section class="column" data-column="idea"><header class="column-header"><div><span class="status-dot idea"></span><h3>アイデア</h3><span class="column-count">—</span></div><span class="column-symbol">✳</span></header><p class="column-description">ひらめきの、はじまり。</p><div class="cards"><div class="loading-card">アイデアを読み込み中…</div></div></section><section class="column" data-column="building"><header class="column-header"><div><span class="status-dot building"></span><h3>つくっている</h3><span class="column-count">—</span></div><span class="column-symbol">◴</span></header><p class="column-description">少しずつ、かたちに。</p><div class="cards"><div class="loading-card">もうすぐ表示されます</div></div></section><section class="column" data-column="shipped"><header class="column-header"><div><span class="status-dot shipped"></span><h3>できた！</h3><span class="column-count">—</span></div><span class="column-symbol">↗</span></header><p class="column-description">次の誰かの、お気に入りに。</p><div class="cards"><div class="loading-card">もうすぐ表示されます</div></div></section></div>
+</section>
+<footer><span><span class="footer-logo">↗</span> Built with curiosity. Shipped with <strong>Kamui.</strong></span><span>公開デモ · サンプル投票を含みます · 投稿・変更は全員に共有されます</span></footer>
+</main>
+</div>
+<dialog id="idea-dialog"><form id="idea-form"><div class="dialog-top"><span class="eyebrow">MAKE ROOM FOR WHAT’S NEXT</span><button type="button" class="close" id="close-dialog" aria-label="閉じる">×</button></div><h2>そのひらめきを、届けよう<span class="orange">。</span></h2><p class="dialog-description">まだ小さなアイデアでも、大歓迎。</p><label>タイトル <span>必須</span><input name="title" placeholder="こんなのがあったら、いいな" maxlength="100" required></label><label>どんなアイデア？ <span>必須</span><textarea name="description" placeholder="誰の、どんな毎日がよくなる？" maxlength="600" rows="4" required></textarea></label><div class="form-row"><label>カテゴリ<select name="category"><option>Product</option><option>Design</option><option>Engineering</option></select></label><label>あなたの名前<input name="author" placeholder="Guest" maxlength="30" autocomplete="nickname"></label></div><p class="form-error" id="form-error" role="alert"></p><div class="dialog-footer"><small>投稿はこのデモの参加者全員に公開されます。</small><button class="primary" type="submit" id="submit-idea">アイデアを届ける ↗</button></div></form></dialog>
+<div class="toast" id="toast" role="status" hidden></div>
+<template id="card-template"><article class="idea-card"><div class="card-top"><span class="category-label"></span><span class="card-id"></span></div><h4></h4><p class="card-description"></p><div class="card-bottom"><button class="vote" type="button"><span>↑</span><strong></strong></button><div class="author"><span class="avatar"></span><span class="author-name"></span></div></div><div class="card-status"><span>ステータス</span><select aria-label="ステータスを変更"><option value="idea">アイデア</option><option value="building">つくっている</option><option value="shipped">できた！</option></select></div></article></template>
+</body></html>
