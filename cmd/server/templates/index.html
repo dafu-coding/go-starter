@@ -1,36 +1,88 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="小さなひらめきを、次のリリースへ。チームでアイデアを育てる Launchboard。">
-<title>Launchboard — Ideas into motion.</title>
-<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/static/app.css"><script src="/static/app.js" defer></script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="担当者、期限、優先度がひと目で分かる、チームのためのタスクボード。">
+  <title>Launchboard — チームの仕事を、前へ。</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/app.css"><script src="/static/app.js" defer></script>
 </head>
 <body>
-<aside class="sidebar">
-<a class="brand" href="/" aria-label="Launchboard ホーム"><span class="brand-mark">↗</span>launchboard<span class="brand-period">.</span></a>
-<div class="workspace"><span class="workspace-icon">d.</span><div><strong>Dafu Studio</strong><small>Team workspace</small></div><span class="workspace-arrow">⌄</span></div>
-<p class="nav-label">WORKSPACE</p>
-<nav aria-label="メイン"><button class="nav-item active" data-view="all"><span>▦</span> Overview <span class="nav-count" id="nav-total">—</span></button><button class="nav-item" data-view="voted"><span>♡</span> My votes</button><button class="nav-item" data-view="shipped"><span>✓</span> Shipped</button></nav>
-<div class="sidebar-note"><span class="note-orbit">✳</span><strong>Good things start<br>with a little idea.</strong><p>そのひらめきが、<br>次の「いいね」になる。</p><button class="text-button" data-create>アイデアを届ける ↗</button></div>
-<div class="sidebar-bottom"><span class="avatar me">D</span><div><strong>Demo guest</strong><small>みんなで試せるデモ</small></div><span class="online-dot"></span></div>
-</aside>
-<div class="app-shell">
-<header class="topbar"><span><span class="breadcrumb">Workspace</span><span class="slash">/</span><span id="page-name">Overview</span></span><div class="topbar-right"><span class="demo-badge"><span class="online-dot"></span>LIVE DEMO</span><span class="avatar tiny">D</span></div></header>
-<nav class="mobile-views" aria-label="表示切り替え"><button class="active" data-view="all">Overview</button><button data-view="voted">My votes</button><button data-view="shipped">Shipped</button></nav>
-<main>
-<div class="heading"><div><div class="eyebrow"><span></span> A LITTLE IDEA. A BIG POSSIBILITY.</div><h1>次の「いいね」を、<br>ここから<span class="orange">。</span></h1><p class="intro">ひらめきを集めて、みんなで育てて、かたちにする。</p></div><button class="primary" data-create><span>＋</span> アイデアを追加</button></div>
-<section class="stats" aria-label="ワークスペースの集計"><div class="stat"><span class="stat-icon peach">↗</span><div><span class="stat-label">集まったアイデア</span><strong id="stat-ideas">—</strong></div><span class="stat-caption">Small sparks, big things.</span></div><div class="stat"><span class="stat-icon lilac">♡</span><div><span class="stat-label">みんなの投票</span><strong id="stat-votes">—</strong></div><span class="stat-caption">Every voice counts.</span></div><div class="stat"><span class="stat-icon mint">✓</span><div><span class="stat-label">リリース済み</span><strong id="stat-shipped">—</strong></div><span class="stat-caption">Made it happen.</span></div></section>
-<section class="board-section" aria-label="アイデアボード"><div class="section-heading"><div><h2 id="board-title">アイデアボード</h2><span class="section-subtitle">A space for what’s next.</span></div><button class="refresh" id="refresh" aria-label="最新のデータを取得">↻</button></div>
-<div class="toolbar"><div class="filters" role="group" aria-label="カテゴリで絞り込み"><button class="filter selected" data-category="all" aria-pressed="true">すべて</button><button class="filter" data-category="Product" aria-pressed="false"><span class="category-dot product"></span>Product</button><button class="filter" data-category="Design" aria-pressed="false"><span class="category-dot design"></span>Design</button><button class="filter" data-category="Engineering" aria-pressed="false"><span class="category-dot engineering"></span>Engineering</button></div><div class="tools"><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="アイデアを検索" aria-label="アイデアを検索"></label><select id="sort" aria-label="並び順"><option value="popular">人気順 ↓</option><option value="recent">新着順 ↓</option></select></div></div>
-<div id="load-error" role="alert" hidden></div>
-<div class="board" id="board" aria-busy="true"><section class="column" data-column="idea"><header class="column-header"><div><span class="status-dot idea"></span><h3>アイデア</h3><span class="column-count">—</span></div><span class="column-symbol">✳</span></header><p class="column-description">ひらめきの、はじまり。</p><div class="cards"><div class="loading-card">アイデアを読み込み中…</div></div></section><section class="column" data-column="building"><header class="column-header"><div><span class="status-dot building"></span><h3>つくっている</h3><span class="column-count">—</span></div><span class="column-symbol">◴</span></header><p class="column-description">少しずつ、かたちに。</p><div class="cards"><div class="loading-card">もうすぐ表示されます</div></div></section><section class="column" data-column="shipped"><header class="column-header"><div><span class="status-dot shipped"></span><h3>できた！</h3><span class="column-count">—</span></div><span class="column-symbol">↗</span></header><p class="column-description">次の誰かの、お気に入りに。</p><div class="cards"><div class="loading-card">もうすぐ表示されます</div></div></section></div>
+<div id="startup" class="startup">Launchboard を開いています…</div>
+<section id="login-screen" class="login-screen" hidden>
+  <form id="login-form" class="login-card">
+    <a class="brand" href="/"><span class="brand-mark">↗</span>launchboard<span class="orange">.</span></a>
+    <h1>おかえりなさい。</h1><p>チームのワークスペースにログインします。</p>
+    <label>ワークスペースのパスワード<input type="password" name="password" required autocomplete="current-password" maxlength="1024"></label>
+    <p id="login-error" class="form-error" role="alert"></p><button class="primary" type="submit">ログイン →</button>
+  </form>
 </section>
-<footer><span><span class="footer-logo">↗</span> Built with curiosity. Shipped with <strong>Kamui.</strong></span><span>公開デモ · サンプル投票を含みます · 投稿・変更は全員に共有されます</span></footer>
-</main>
+<div id="workspace" hidden>
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="Launchboard ホーム"><span class="brand-mark">↗</span>launchboard<span class="orange">.</span></a>
+    <div class="workspace-label"><span class="workspace-icon">▦</span><div><strong>チームのタスク</strong><small>Shared workspace</small></div></div>
+    <p class="nav-label">WORKSPACE</p>
+    <nav aria-label="メイン">
+      <button class="nav-item active" data-view="all"><span>▦</span> すべてのタスク <b id="nav-total">0</b></button>
+      <button class="nav-item" data-view="mine"><span>◎</span> 自分の担当</button>
+      <button class="nav-item" data-view="due"><span>◷</span> 今日までの期限 <b id="nav-due">0</b></button>
+      <button class="nav-item" data-view="shipped"><span>✓</span> 完了したタスク</button>
+      <button class="nav-item" data-view="archived"><span>▤</span> アーカイブ</button>
+    </nav>
+    <div class="sidebar-tip"><span>✳</span><strong>今日の一歩を、明確に。</strong><p>担当と期限を決めたら、<br>あとはひとつずつ。</p><button data-create>＋ タスクをつくる</button></div>
+    <button class="profile" id="profile-button"><span class="avatar me" id="profile-avatar">G</span><span><strong id="profile-name">名前を設定</strong><small>表示名を変更</small></span><span class="profile-gear">⚙</span></button>
+  </aside>
+  <div class="app-shell">
+    <header class="topbar"><div class="breadcrumbs"><span>Workspace</span><span>/</span><strong id="page-name">すべてのタスク</strong></div><div class="topbar-actions"><span class="connection"><i></i><span id="access-label">共有ワークスペース</span></span><button id="help-button" class="icon-button" aria-label="使い方">?</button><button id="logout" class="quiet-button" hidden>ログアウト</button></div></header>
+    <nav class="mobile-views" aria-label="表示切り替え"><button data-view="all" class="active">すべて</button><button data-view="mine">自分の担当</button><button data-view="due">期限</button><button data-view="shipped">完了</button><button data-view="archived">保管</button><button id="mobile-profile" aria-label="表示名を変更">⚙</button></nav>
+    <main>
+      <div class="heading"><div><p class="eyebrow" id="today-label">YOUR NEXT STEP, IN FOCUS.</p><h1>チームの仕事を、前へ<span class="orange">。</span></h1><p class="intro">やること、担当、期限。次の一歩が見える場所。</p></div><button class="primary" data-create><span>＋</span> タスクを追加</button></div>
+      <section class="stats" aria-label="タスクの集計">
+        <button class="stat" data-view="all"><span class="stat-icon peach">▦</span><span><small>未完了のタスク</small><strong id="stat-open">0</strong></span><span class="stat-hint">やることを整理</span></button>
+        <button class="stat" data-view="due"><span class="stat-icon rose">◷</span><span><small>期限を過ぎたタスク</small><strong id="stat-overdue">0</strong></span><span class="stat-hint" id="today-count">今日の期限 0件</span></button>
+        <button class="stat" data-view="shipped"><span class="stat-icon mint">✓</span><span><small>完了したタスク</small><strong id="stat-done">0</strong></span><span class="stat-hint" id="completion-rate">完了率 0%</span></button>
+      </section>
+      <div id="sample-banner" class="sample-banner" hidden><span>サンプルタスクを表示しています。自分のタスクを追加して使い始められます。</span><button id="archive-samples">サンプルを片付ける</button></div>
+      <section aria-label="タスク一覧" class="board-section">
+        <div class="section-heading"><div><h2 id="board-title">すべてのタスク</h2><span id="result-count" class="result-count"></span></div><div class="board-actions"><div class="view-toggle" aria-label="表示形式"><button id="view-board" class="selected" aria-pressed="true">▦ ボード</button><button id="view-list" aria-pressed="false">☷ リスト</button></div><a href="/api/export" class="quiet-button" download>CSV ↓</a><button id="refresh" class="icon-button" aria-label="最新のデータを取得">↻</button></div></div>
+        <div class="toolbar">
+          <label class="search"><span>⌕</span><input id="search" type="search" placeholder="タイトル・メモを検索" aria-label="タスクを検索"></label>
+          <select id="category-filter" aria-label="カテゴリで絞り込み"><option value="all">すべてのカテゴリ</option><option>Product</option><option>Design</option><option>Engineering</option></select>
+          <select id="assignee-filter" aria-label="担当者で絞り込み"><option value="all">すべての担当者</option><option value="">未割り当て</option></select>
+          <select id="priority-filter" aria-label="優先度で絞り込み"><option value="all">すべての優先度</option><option value="high">高</option><option value="normal">通常</option><option value="low">低</option></select>
+          <select id="sort" aria-label="並び順"><option value="priority">優先度順</option><option value="due">期限が近い順</option><option value="recent">新着順</option></select>
+          <button id="clear-filters" class="text-button" hidden>条件をクリア</button>
+        </div>
+        <div id="load-error" class="error-banner" role="alert" hidden></div>
+        <div id="empty-state" class="empty-state" hidden><span class="empty-symbol">↗</span><h3 id="empty-title">最初のタスクから、はじめよう。</h3><p id="empty-description">やることを追加して、担当と期限を決めましょう。</p><div><button class="primary" data-create>＋ タスクを追加</button><button id="load-samples" class="secondary">サンプルで試す</button></div></div>
+        <div class="board" id="board" aria-busy="true">
+          <section class="column" data-column="idea"><header><div><span class="status-dot idea"></span><h3>未着手</h3><span class="column-count">0</span></div><span>○</span></header><div class="cards"></div><button class="column-add" data-create>＋ タスクを追加</button></section>
+          <section class="column" data-column="building"><header><div><span class="status-dot building"></span><h3>進行中</h3><span class="column-count">0</span></div><span>◴</span></header><div class="cards"></div></section>
+          <section class="column" data-column="shipped"><header><div><span class="status-dot shipped"></span><h3>完了</h3><span class="column-count">0</span></div><span>✓</span></header><div class="cards"></div></section>
+        </div>
+        <div id="task-list" class="task-list" hidden><div class="list-head"><span>タスク</span><span>担当者</span><span>期限</span><span>優先度</span><span>ステータス</span></div><div id="list-rows"></div></div>
+      </section>
+      <footer><span><span class="orange">↗</span> Launchboard <span class="footer-divider">/</span> Make progress, together.</span><span id="last-updated"></span></footer>
+    </main>
+  </div>
 </div>
-<dialog id="idea-dialog"><form id="idea-form"><div class="dialog-top"><span class="eyebrow">MAKE ROOM FOR WHAT’S NEXT</span><button type="button" class="close" id="close-dialog" aria-label="閉じる">×</button></div><h2>そのひらめきを、届けよう<span class="orange">。</span></h2><p class="dialog-description">まだ小さなアイデアでも、大歓迎。</p><label>タイトル <span>必須</span><input name="title" placeholder="こんなのがあったら、いいな" maxlength="100" required></label><label>どんなアイデア？ <span>必須</span><textarea name="description" placeholder="誰の、どんな毎日がよくなる？" maxlength="600" rows="4" required></textarea></label><div class="form-row"><label>カテゴリ<select name="category"><option>Product</option><option>Design</option><option>Engineering</option></select></label><label>あなたの名前<input name="author" placeholder="Guest" maxlength="30" autocomplete="nickname"></label></div><p class="form-error" id="form-error" role="alert"></p><div class="dialog-footer"><small>投稿はこのデモの参加者全員に公開されます。</small><button class="primary" type="submit" id="submit-idea">アイデアを届ける ↗</button></div></form></dialog>
-<div class="toast" id="toast" role="status" hidden></div>
-<template id="card-template"><article class="idea-card"><div class="card-top"><span class="category-label"></span><span class="card-id"></span></div><h4></h4><p class="card-description"></p><div class="card-bottom"><button class="vote" type="button"><span>↑</span><strong></strong></button><div class="author"><span class="avatar"></span><span class="author-name"></span></div></div><div class="card-status"><span>ステータス</span><select aria-label="ステータスを変更"><option value="idea">アイデア</option><option value="building">つくっている</option><option value="shipped">できた！</option></select></div></article></template>
-</body></html>
+<dialog id="task-dialog" aria-labelledby="dialog-title">
+  <form id="task-form">
+    <div class="dialog-top"><span class="eyebrow" id="dialog-kicker">NEW TASK</span><button type="button" class="close" data-close="task-dialog" aria-label="閉じる">×</button></div>
+    <h2 id="dialog-title">タスクを追加</h2><p class="dialog-description" id="dialog-description">小さく分けて、一歩ずつ進めよう。</p>
+    <label>タイトル <span class="required">必須</span><input name="title" placeholder="例：トップページのデザインを確認" maxlength="100" required></label>
+    <label>メモ<textarea name="description" placeholder="やること、確認事項、参考リンクなど" maxlength="3000" rows="5"></textarea></label>
+    <div class="form-row"><label>担当者<input name="assignee" list="assignees" placeholder="未割り当て" maxlength="60" autocomplete="off"></label><label>期限<input name="dueDate" type="date" min="1900-01-01" max="9999-12-31"></label></div>
+    <div class="form-row"><label>優先度<select name="priority"><option value="normal">通常</option><option value="high">高</option><option value="low">低</option></select></label><label>カテゴリ<select name="category"><option>Product</option><option>Design</option><option>Engineering</option></select></label></div>
+    <label id="status-field">ステータス<select name="status"><option value="idea">未着手</option><option value="building">進行中</option><option value="shipped">完了</option></select></label>
+    <p id="task-meta" class="task-meta"></p><p class="form-error" id="form-error" role="alert"></p>
+    <div class="dialog-footer"><button id="archive-task" type="button" class="quiet-button" hidden>アーカイブ</button><div class="dialog-buttons"><button type="button" class="secondary" data-close="task-dialog">キャンセル</button><button class="primary" type="submit" id="submit-task">追加する</button></div></div>
+  </form>
+</dialog>
+<dialog id="profile-dialog" aria-labelledby="profile-title"><form id="profile-form"><div class="dialog-top"><span class="eyebrow">YOUR WORKSPACE</span><button type="button" class="close" data-close="profile-dialog" aria-label="閉じる">×</button></div><h2 id="profile-title">表示名を設定</h2><p class="dialog-description">「自分の担当」で、この名前のタスクを表示します。名前はこのブラウザに保存されます。</p><label>表示名<input name="name" required maxlength="30" placeholder="例：田中" autocomplete="nickname"></label><div class="dialog-buttons"><button type="submit" class="primary">保存する</button></div></form></dialog>
+<dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-top"><span class="eyebrow">GETTING STARTED</span><button class="close" data-close="help-dialog" aria-label="閉じる">×</button></div><h2 id="help-title">チームで、ひとつずつ。</h2><ol class="help-steps"><li><strong>やることを追加する</strong><p>タイトルだけでもOK。メモ、担当、期限はあとから編集できます。</p></li><li><strong>取りかかったら「進行中」へ</strong><p>カード下のステータスで更新。タイトルをクリックすると詳細を編集できます。</p></li><li><strong>終わったら「完了」へ</strong><p>不要になったタスクはアーカイブへ。いつでも復元でき、CSVにも保存できます。</p></li></ol><p class="dialog-description">同じワークスペースを開いた人とデータを共有します。表示名は担当者の絞り込みに使うもので、個人アカウントではありません。</p></dialog>
+<datalist id="assignees"></datalist>
+<div class="toast" id="toast" role="status" hidden><span></span><button id="toast-action" hidden>元に戻す</button></div>
+<template id="card-template"><article class="task-card"><div class="card-top"><span class="category-label"></span><span class="priority-label"></span></div><button class="task-title"></button><p class="card-description"></p><div class="card-meta"><span class="due-label"></span><span class="assignee-label"><span class="avatar"></span><span></span></span></div><div class="card-bottom"><span class="card-id"></span><select class="status-select" aria-label="ステータスを変更"><option value="idea">○ 未着手</option><option value="building">◴ 進行中</option><option value="shipped">✓ 完了</option></select><button class="restore-task" hidden>復元する ↗</button></div></article></template>
+</body>
+</html>

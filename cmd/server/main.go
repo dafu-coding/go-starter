@@ -34,9 +34,20 @@ type Idea struct {
 	Votes       int       `json:"votes"`
 	Voted       bool      `json:"voted"`
 	CreatedAt   time.Time `json:"createdAt"`
+	Assignee    string    `json:"assignee"`
+	Priority    string    `json:"priority"`
+	DueDate     string    `json:"dueDate"`
+	Archived    bool      `json:"archived"`
+	Version     int       `json:"version"`
+	UpdatedAt   time.Time `json:"updatedAt"`
+	Sample      bool      `json:"sample"`
 }
 
 func main() {
+	if password := os.Getenv("APP_PASSWORD"); password != "" && utf8.RuneCountInString(password) < 12 {
+		log.Fatal("APP_PASSWORD must contain at least 12 characters")
+	}
+
 	db, err := database.Open()
 	if err != nil {
 		log.Fatal(err)
@@ -83,56 +94,32 @@ func router(db *sql.DB) http.Handler {
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
-		rows, err := db.QueryContext(ctx, `SELECT i.id,i.title,i.description,i.category,i.status,i.author,i.seed_votes+(SELECT COUNT(*) FROM launchboard_votes v WHERE v.idea_id=i.id),EXISTS(SELECT 1 FROM launchboard_votes v WHERE v.idea_id=i.id AND v.visitor=$1),i.created_at FROM launchboard_ideas i ORDER BY i.created_at DESC,i.id DESC LIMIT 500`, visitor)
+		ideas, err := listIdeas(ctx, db, visitor)
 		if err != nil {
 			fail(w, 503, "データを読み込めませんでした。もう一度お試しください。")
 			return
 		}
-		defer rows.Close()
-		ideas := []Idea{}
-		for rows.Next() {
-			var idea Idea
-			if err := rows.Scan(&idea.ID, &idea.Title, &idea.Description, &idea.Category, &idea.Status, &idea.Author, &idea.Votes, &idea.Voted, &idea.CreatedAt); err != nil {
-				fail(w, 500, "Could not read idea")
-				return
-			}
-			ideas = append(ideas, idea)
-		}
-		if rows.Err() != nil {
-			fail(w, 503, "Could not read ideas")
-			return
-		}
 		respond(w, 200, ideas)
 	})
-	mux.HandleFunc("POST /api/ideas", func(w http.ResponseWriter, r *http.Request) {
-		var body struct {
-			Title       string `json:"title"`
-			Description string `json:"description"`
-			Author      string `json:"author"`
-			Category    string `json:"category"`
-		}
-		if !decode(w, r, &body) {
-			return
-		}
-		body.Title = strings.TrimSpace(body.Title)
-		body.Description = strings.TrimSpace(body.Description)
-		body.Author = strings.TrimSpace(body.Author)
-		if body.Author == "" {
-			body.Author = "Guest"
-		}
-		if utf8.RuneCountInString(body.Title) < 1 || utf8.RuneCountInString(body.Title) > 100 || utf8.RuneCountInString(body.Description) < 1 || utf8.RuneCountInString(body.Description) > 600 || utf8.RuneCountInString(body.Author) > 30 || !validCategory(body.Category) {
-			fail(w, 400, "タイトル・説明・カテゴリを確認してください。")
-			return
-		}
+	mux.HandleFunc("POST /api/ideas", func(w http.ResponseWriter, r *http.Request) { createTask(db, w, r) })
+	mux.HandleFunc("GET /api/export", func(w http.ResponseWriter, r *http.Request) { exportTasks(db, w, r) })
+	mux.HandleFunc("POST /api/samples", func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
-		var id int
-		err := db.QueryRowContext(ctx, `INSERT INTO launchboard_ideas(title,description,category,author) VALUES ($1,$2,$3,$4) RETURNING id`, body.Title, body.Description, body.Category, body.Author).Scan(&id)
-		if err != nil {
-			fail(w, 503, "保存できませんでした。もう一度お試しください。")
+		if err := database.AddSamples(ctx, db); err != nil {
+			fail(w, 503, "サンプルを読み込めませんでした。")
 			return
 		}
-		respond(w, 201, map[string]int{"id": id})
+		respond(w, 200, map[string]bool{"ok": true})
+	})
+	mux.HandleFunc("POST /api/samples/archive", func(w http.ResponseWriter, r *http.Request) {
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+		if _, err := db.ExecContext(ctx, "UPDATE launchboard_ideas SET archived=TRUE,version=version+1,updated_at=NOW() WHERE seed_key IS NOT NULL AND NOT archived"); err != nil {
+			fail(w, 503, "サンプルを整理できませんでした。")
+			return
+		}
+		respond(w, 200, map[string]bool{"ok": true})
 	})
 	mux.HandleFunc("POST /api/ideas/{id}/vote", func(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.Atoi(r.PathValue("id"))
@@ -177,40 +164,9 @@ func router(db *sql.DB) http.Handler {
 		}
 		respond(w, 200, map[string]bool{"voted": *body.Voted})
 	})
-	mux.HandleFunc("PATCH /api/ideas/{id}", func(w http.ResponseWriter, r *http.Request) {
-		id, err := strconv.Atoi(r.PathValue("id"))
-		if err != nil || id < 1 {
-			fail(w, 400, "Invalid idea ID")
-			return
-		}
-		var body struct {
-			Status string `json:"status"`
-		}
-		if !decode(w, r, &body) {
-			return
-		}
-		if body.Status != "idea" && body.Status != "building" && body.Status != "shipped" {
-			fail(w, 400, "Invalid status")
-			return
-		}
-		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
-		defer cancel()
-		result, err := db.ExecContext(ctx, "UPDATE launchboard_ideas SET status=$1 WHERE id=$2", body.Status, id)
-		if err != nil {
-			fail(w, 503, "更新できませんでした。もう一度お試しください。")
-			return
-		}
-		count, err := result.RowsAffected()
-		if err != nil {
-			fail(w, 500, "Could not update idea")
-			return
-		}
-		if count == 0 {
-			fail(w, 404, "Idea not found")
-			return
-		}
-		respond(w, 200, map[string]string{"status": body.Status})
-	})
+	mux.HandleFunc("PATCH /api/ideas/{id}", func(w http.ResponseWriter, r *http.Request) { updateTask(db, w, r) })
+
+	protected := accessControl(mux)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Referrer-Policy", "same-origin")
@@ -231,7 +187,7 @@ func router(db *sql.DB) http.Handler {
 				return
 			}
 		}
-		mux.ServeHTTP(w, r)
+		protected.ServeHTTP(w, r)
 	})
 }
 

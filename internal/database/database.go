@@ -13,6 +13,9 @@ import (
 //go:embed schema.sql
 var schema string
 
+//go:embed sample.sql
+var sample string
+
 func Open() (*sql.DB, error) {
 	dsn := os.Getenv("DATABASE_URL")
 	if dsn == "" {
@@ -47,4 +50,10 @@ func Migrate(ctx context.Context, db *sql.DB) error {
 		return err
 	}
 	return tx.Commit()
+}
+
+// AddSamples is explicit and idempotent; normal startup never populates user data.
+func AddSamples(ctx context.Context, db *sql.DB) error {
+	_, err := db.ExecContext(ctx, sample)
+	return err
 }
